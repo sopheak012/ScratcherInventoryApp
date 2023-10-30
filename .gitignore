@@ -1,0 +1,22 @@
+# Node.js
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Dependency directories
+pids/
+lock
+.vscode/
+.nyc_output/
+
+# dotenv environment files
+.env
+
+# Mac OS
+.DS_Store
+
+# Editor directories
+.idea/
+.vscode/
