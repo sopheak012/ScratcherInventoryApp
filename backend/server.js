@@ -1,26 +1,34 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const app = express();
-const port = process.env.PORT || 3000;
-const sequelize = require("./database/db");
+const port = process.env.PORT || 4000;
 
-//MiddleWare: Body Parser
+// Replace 'your_database_uri' with your MongoDB connection URI.
+const databaseURI =
+  "mongodb+srv://sopheak012:test012@mernapp.hdvj4cr.mongodb.net/ScratcherInventoryApp";
+
+// Middleware for parsing JSON data
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.get("/", async (req, res) => {
+// Import the scratcher route
+const scratcherRoute = require("./routes/scratcherRoutes");
+
+async function startServer() {
   try {
-    await sequelize.authenticate();
-    console.log("Database connection has been established successfully.");
+    // Connect to MongoDB using Mongoose and the URI
+    await mongoose.connect(databaseURI);
+    console.log("Connected to MongoDB");
 
-    res.send("Hello from the backend!");
+    // Use the scratcher route
+
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
   } catch (error) {
-    console.log(error("Unable to connect to the database:", error));
-    res.status(500).send("Database connection error");
+    console.error("Error connecting to MongoDB:", error);
   }
-});
+}
 
-sequelize.authenticate().then();
+startServer();
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+app.use("/", scratcherRoute);
