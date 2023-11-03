@@ -1,12 +1,20 @@
-import React from "react";
+import { useSelector } from "react-redux";
 import ScratcherList from "./components/ScratcherList";
 import AddScratcher from "./components/AddScratcher";
 import ScratchTestDataGenerator from "./components/ScratchTestDataGenerator";
 
 function App() {
+  // Use the useSelector hook to access the total cost from the store
+  const { totalScratcherValue, totalEarning } = useSelector(
+    (state) => state.scratcher
+  );
+
   return (
     <>
       <h1>Scratcher Examples</h1>
+      <p>Total Scratcher Value: ${totalScratcherValue}</p>
+      <p>Total Earning Cost: ${totalEarning}</p>{" "}
+      {/* Display the total earning cost */}
       <AddScratcher />
       <ScratcherList />
       <ScratchTestDataGenerator />

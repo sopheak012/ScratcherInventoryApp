@@ -1,4 +1,3 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearScratchers } from "../features/scratcherSlice"; // Import your Redux actions
 
