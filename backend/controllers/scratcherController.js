@@ -79,6 +79,30 @@ async function updateScratcher(req, res) {
   }
 }
 
+// Function to replace all scratcher data with new data
+async function replaceScratcherData(req, res) {
+  try {
+    // Your new data, which should replace the existing data
+    const newScratcherData = req.body;
+
+    // Delete all existing scratcher documents
+    await Scratcher.deleteMany({});
+
+    // Insert the new data
+    await Scratcher.insertMany(newScratcherData);
+
+    res.status(200).json({ message: "Scratcher data replaced successfully" });
+  } catch (error) {
+    console.error("Error in replaceScratcherData:", error); // Log the error details
+    res
+      .status(500)
+      .json({
+        error: "Unable to replace scratcher data",
+        details: error.message,
+      });
+  }
+}
+
 // Delete a scratcher ticket by scratcherID
 async function deleteScratcher(req, res) {
   try {
@@ -101,4 +125,5 @@ module.exports = {
   getScratcher,
   updateScratcher,
   deleteScratcher,
+  replaceScratcherData,
 };

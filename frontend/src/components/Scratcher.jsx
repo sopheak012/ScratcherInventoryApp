@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { removeScratcher } from "../features/scratcherSlice";
 import { updateScratcher } from "../features/scratcherSlice";
 import styled from "styled-components";
+import { useState, useRef } from "react"; // Import React, useState, and useRef
 
 const Container = styled.div`
   width: 100%;
@@ -9,18 +10,21 @@ const Container = styled.div`
   margin: 0 auto;
   background: #f0f0f0;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px; /* Smaller border radius */
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   font-family: "Verdana", Arial, sans-serif;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s;
 `;
 
 const TopBar = styled.div`
   background: linear-gradient(to bottom, #0070c9, #005aa6);
   color: white;
   padding: 10px;
-  border-top-left-radius: 8px; /* Smaller border radius */
-  border-top-right-radius: 8px; /* Smaller border radius */
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -40,38 +44,50 @@ const Button = styled.button`
   padding: 10px 20px;
   border-radius: 6px;
   cursor: pointer;
-  font-family: "Helvetica Neue", Arial, sans-serif; /* Use Helvetica Neue, fallback to Arial, and then generic sans-serif */
+  font-family: "Helvetica Neue", Arial, sans-serif;
 `;
 
 const Heading = styled.h1`
-  font-size: 16px; /* Reduced font size */
+  font-size: 16px;
   font-weight: bold;
   margin: 0;
-  font-family: "Helvetica Neue", Arial, sans-serif; /* Use Helvetica Neue, fallback to Arial, and then generic sans-serif */
+  font-family: "Helvetica Neue", Arial, sans-serif;
 `;
 
 const Scratcher = ({ scratcherData }) => {
   const dispatch = useDispatch();
+  const [clicked, setClicked] = useState(false);
+  const containerRef = useRef(null); // Use useRef to access the container element
 
   const handleRemoveScratcher = () => {
     dispatch(removeScratcher(scratcherData.scratcherID));
   };
 
   const handleScratcherClick = () => {
-    if (scratcherData.inventory > 0) {
-      dispatch(
-        updateScratcher({
-          scratcherID: scratcherData.scratcherID,
-          updatedData: {
-            inventory: scratcherData.inventory - 1,
-          },
-        })
-      );
+    if (!clicked) {
+      // Only allow the click if the animation is not in progress
+      setClicked(true);
+      containerRef.current.style.transform = "scale(0.95)";
+      // Reset the animation when it's done
+      containerRef.current.addEventListener("transitionend", () => {
+        setClicked(false);
+        containerRef.current.style.transform = "scale(1)";
+      });
+      if (scratcherData.inventory > 0) {
+        dispatch(
+          updateScratcher({
+            scratcherID: scratcherData.scratcherID,
+            updatedData: {
+              inventory: scratcherData.inventory - 1,
+            },
+          })
+        );
+      }
     }
   };
 
   return (
-    <Container onClick={handleScratcherClick}>
+    <Container onClick={handleScratcherClick} ref={containerRef}>
       <TopBar>
         <Heading>Scratcher ID: {scratcherData.scratcherID}</Heading>
       </TopBar>

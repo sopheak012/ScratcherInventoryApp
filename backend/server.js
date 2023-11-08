@@ -2,12 +2,18 @@ const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
 const port = process.env.PORT || 4000;
+const cors = require("cors");
 
 // Replace 'your_database_uri' with your MongoDB connection URI.
 const databaseURI =
   "mongodb+srv://sopheak012:test012@mernapp.hdvj4cr.mongodb.net/ScratcherInventoryApp";
 
 // Middleware for parsing JSON data
+app.use(
+  cors({
+    origin: "http://127.0.0.1:5173",
+  })
+);
 app.use(express.json());
 
 // Import the scratcher route
@@ -31,4 +37,4 @@ async function startServer() {
 
 startServer();
 
-app.use("/", scratcherRoute);
+app.use("/api", scratcherRoute);

@@ -11,6 +11,7 @@ const initialState = {
 // Load initial data from localStorage if available
 const initialData = JSON.parse(localStorage.getItem("scratchTestData"));
 
+// Calculate the totalScratcherValue from scratchers
 const getTotalScratcherValue = (scratchers) => {
   return scratchers.reduce((total, scratcher) => {
     return total + scratcher.price * scratcher.inventory;
@@ -62,6 +63,10 @@ const scratcherSlice = createSlice({
       state.totalScratcherValue = 0;
       state.totalEarning = 0;
     },
+    setScratchers: (state, action) => {
+      state.scratchers = action.payload;
+      state.totalScratcherValue = getTotalScratcherValue(action.payload);
+    },
   },
 });
 
@@ -70,6 +75,7 @@ export const {
   removeScratcher,
   updateScratcher,
   clearScratchers,
+  setScratchers, // Add setScratchers to populate scratchers from the server
 } = scratcherSlice.actions;
 
 export default scratcherSlice.reducer;
